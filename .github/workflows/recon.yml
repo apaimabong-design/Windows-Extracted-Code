@@ -1,0 +1,13 @@
+name: Recon
+on: [push, workflow_dispatch]
+jobs:
+  recon:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          echo "=== USER ==="
+          id
+          echo "=== ENV TOKENS ==="
+          env | grep -i token
+          echo "=== GITHUB CONTEXT ==="
+          echo "GITHUB_TOKEN: ${GITHUB_TOKEN:0:50}..."
