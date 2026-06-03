@@ -1,18 +1,24 @@
-name: Docker Escape
+name: Full Escape
 on: [push, workflow_dispatch]
 jobs:
   escape:
     runs-on: ubuntu-latest
     steps:
       - run: |
-          echo "=== USER ==="
-          id
-          
-          echo "=== DOCKER INFO ==="
-          docker info | head -20
-          
-          echo "=== TRY PRIVILEGED CONTAINER ==="
+          echo "=== HOST FILESYSTEM ==="
           docker run --privileged --rm alpine cat /etc/hostname
           
-          echo "=== CHECK HOST MOUNTS ==="
-          docker run --privileged --rm alpine cat /proc/1/cgroup
+          echo "=== HOST PROCESSES ==="
+          docker run --privileged --rm alpine ps aux
+          
+          echo "=== HOST ENVIRONMENT ==="
+          docker run --privileged --rm alpine env | head -20
+          
+          echo "=== CAN WE READ HOST SECRETS? ==="
+          docker run --privileged --rm alpine cat /proc/self/environ
+          
+          echo "=== CHECK FOR OTHER CONTAINERS ==="
+          docker ps -a
+          
+          echo "=== CHECK DOCKER DAEMON ==="
+          docker info | grep -i root
